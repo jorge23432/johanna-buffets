@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Johanna Buffets</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#f0d6cc;font-family:Georgia,serif}
+#wrap{position:fixed;inset:0;overflow:hidden}
+.sl{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .7s ease;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sl.on{opacity:1;pointer-events:all}
+/* intro */
+.intro{background:#f0d6cc}
+.intro img.logo{width:min(58vw,250px);height:min(58vw,250px);object-fit:contain}
+.intro .bn{font-size:clamp(26px,6.5vw,42px);color:#1a1410;letter-spacing:3px;margin-top:10px}
+.intro .bs{font-family:Arial,sans-serif;font-size:clamp(9px,2.2vw,12px);letter-spacing:5px;text-transform:uppercase;color:#8a6f68;margin-top:5px}
+.intro .dv{width:50px;height:1px;background:#c9a96e;margin:16px auto}
+.intro .tg{font-size:clamp(15px,3.8vw,20px);font-style:italic;color:#8a6f68}
+/* section */
+.sec{background:#f0d6cc;text-align:center}
+.sec .ln{width:45px;height:1px;background:#c9a96e;margin:0 auto}
+.sec .tt{font-size:clamp(44px,11vw,80px);font-weight:300;color:#1a1410;letter-spacing:3px;margin:18px 0}
+.sec .sb{font-family:Arial,sans-serif;font-size:clamp(9px,2.2vw,12px);letter-spacing:5px;color:#8a6f68;text-transform:uppercase}
+/* photos */
+.ph{background:#fdf6f2;flex-direction:column;align-items:stretch;justify-content:stretch}
+.ph-hd{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;background:#fdf6f2;flex-shrink:0}
+.ph-hd .hl{display:flex;align-items:center;gap:7px}
+.ph-hd img{width:34px;height:34px;object-fit:contain}
+.ph-hd .jb{font-size:15px;color:#1a1410;line-height:1.1}
+.ph-hd .jbs{font-family:Arial,sans-serif;font-size:7px;letter-spacing:2px;color:#8a6f68}
+.ph-hd .lbl{font-family:Arial,sans-serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#8a6f68}
+.ph-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 6px 6px;min-height:0}
+.ph-grid div{overflow:hidden;border-radius:3px;background:#e5cfc6}
+.ph-grid img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-bt{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#f0d6cc;flex-shrink:0}
+.ph-bt .et{font-size:clamp(17px,4.5vw,27px);font-style:italic;color:#1a1410}
+.ph-bt .nm{font-family:Arial,sans-serif;font-size:clamp(10px,2vw,13px);letter-spacing:2px;color:#8a6f68}
+/* contact */
+.ct{background:#1a1410;text-align:center;padding:24px}
+.ct img.logo{width:min(42vw,150px);height:min(42vw,150px);object-fit:contain;filter:brightness(0) invert(1) opacity(.75)}
+.ct .cn{font-family:Arial,sans-serif;font-size:clamp(8px,2vw,10px);letter-spacing:5px;color:#e2c0b0;text-transform:uppercase;margin-top:5px}
+.ct .dv{width:35px;height:1px;background:#c9a96e;margin:14px auto}
+.ct .row{margin:8px 0}
+.ct .lb{font-family:Arial,sans-serif;font-size:clamp(8px,1.8vw,9px);letter-spacing:3px;text-transform:uppercase;color:#8a6f68}
+.ct .hd{font-size:clamp(20px,5.5vw,32px);color:#fff}
+.ct .cta{font-size:clamp(17px,4.5vw,24px);font-style:italic;color:#c9a96e;margin-top:16px}
+/* nav */
+#pb{position:fixed;top:0;left:0;height:3px;background:#c9a96e;z-index:999;width:0%}
+.arr{position:fixed;top:50%;transform:translateY(-50%);z-index:998;background:rgba(240,214,204,0.92);border:none;cursor:pointer;width:46px;height:72px;display:flex;align-items:center;justify-content:center}
+#bP{left:0;border-radius:0 4px 4px 0}#bN{right:0;border-radius:4px 0 0 4px}
+.arr svg{width:28px;height:28px;stroke:#1a1410;fill:none;stroke-width:2.5;pointer-events:none}
+#dots{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:998;flex-wrap:wrap;justify-content:center;max-width:90vw;padding:4px}
+.dot{width:6px;height:6px;border-radius:50%;background:#c9957f;opacity:0.4;cursor:pointer;transition:all .3s;flex-shrink:0}
+.dot.on{opacity:1;background:#1a1410;width:14px;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="pb"></div>
+<div id="wrap"></div>
+<button class="arr" id="bP"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+<button class="arr" id="bN"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></button>
+<div id="dots"></div>
+<script>
+var BASE = '';  // will be set to GitHub Pages URL
+var LOGO = BASE + 'logo.png';
+var FOTOS = BASE + 'fotos/';
+
+var bodas = ['IMG_1411.jpeg','IMG_1413.jpeg','IMG_1431.jpeg','IMG_1433.jpeg','IMG_2440.jpeg','IMG_2450.jpeg','IMG_2451.jpeg','IMG_3843.jpeg','IMG_3845.jpeg','IMG_3855.jpeg','IMG_3881.jpeg','IMG_3882.jpeg','IMG_3787.jpeg','IMG_3790.jpeg','IMG_3794.jpeg','IMG_3802.jpeg'];
+var quinces = ['IMG_2641.jpeg','IMG_2644.jpeg','IMG_2649.jpeg','IMG_2650.jpeg','IMG_2651.jpeg','IMG_2653.jpeg','IMG_3237.jpeg','IMG_3244.jpeg','IMG_3249.jpeg','IMG_3254.jpeg','IMG_4211.jpeg','IMG_4213.jpeg','IMG_4214.jpeg','IMG_4247.jpeg','IMG_4248.jpeg','IMG_4216.jpeg'];
+var especiales = ['IMG_2802.jpeg','IMG_2803.jpeg','IMG_3245.jpeg','IMG_3246.jpeg','IMG_3888.jpeg','IMG_3890.jpeg','IMG_3795.jpeg','IMG_4256.jpeg','IMG_4258.jpeg','IMG_4260.jpeg','IMG_4261.jpeg','IMG_4278.jpeg'];
+
+var SLIDES = [];
+SLIDES.push({t:'intro'});
+SLIDES.push({t:'sec', tt:'Bodas', sb:'Tu día más especial'});
+for(var i=0;i<bodas.length-1;i+=2) SLIDES.push({t:'ph', lbl:'Bodas', sub:'Bodas Elegantes', f1:bodas[i], f2:bodas[i+1]});
+SLIDES.push({t:'sec', tt:'Quinceañeras', sb:'El inicio de una nueva etapa'});
+for(var i=0;i<quinces.length-1;i+=2) SLIDES.push({t:'ph', lbl:'Quinceañeras', sub:'Quinceañeras & Sweet 16', f1:quinces[i], f2:quinces[i+1]});
+SLIDES.push({t:'sec', tt:'Eventos Especiales', sb:'Graduaciones · Cumpleaños · Celebraciones'});
+for(var i=0;i<especiales.length-1;i+=2) SLIDES.push({t:'ph', lbl:'Eventos Especiales', sub:'Graduaciones · Cumpleaños · Celebraciones', f1:especiales[i], f2:especiales[i+1]});
+SLIDES.push({t:'ct'});
+
+var N=SLIDES.length, cur=0, timer=null, DELAY=5000;
+var wrap=document.getElementById('wrap');
+var pb=document.getElementById('pb');
+var dc=document.getElementById('dots');
+
+function makeSlide(s, idx){
+  var d=document.createElement('div');
+  d.id='s'+idx; d.className='sl'+(idx===0?' on':'');
+  if(s.t==='intro'){
+    d.className+=' intro';
+    d.innerHTML='<img class="logo" src="'+LOGO+'" alt="JB"><p class="bn">Johanna Buffets</p><p class="bs">Organización de Eventos</p><div class="dv"></div><p class="tg">Cada celebración, una obra de arte</p>';
+  } else if(s.t==='sec'){
+    d.className+=' sec';
+    d.innerHTML='<div class="ln"></div><p class="tt">'+s.tt+'</p><p class="sb">'+s.sb+'</p><div class="ln" style="margin-top:0"></div>';
+  } else if(s.t==='ph'){
+    d.className+=' ph';
+    var n=String(idx+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+    d.innerHTML='<div class="ph-hd"><div class="hl"><img src="'+LOGO+'" alt="JB"><div><p class="jb">JB</p><p class="jbs">Johanna Buffets</p></div></div><span class="lbl">'+s.lbl+'</span></div><div class="ph-grid"><div><img src="'+FOTOS+s.f1+'" alt="" loading="lazy"></div><div><img src="'+FOTOS+s.f2+'" alt="" loading="lazy"></div></div><div class="ph-bt"><span class="et">'+s.sub+'</span><span class="nm">'+n+'</span></div>';
+  } else if(s.t==='ct'){
+    d.className+=' ct';
+    d.innerHTML='<img class="logo" src="'+LOGO+'" alt="JB"><p class="cn">Organización de Eventos</p><div class="dv"></div><div class="row"><p class="lb">Instagram</p><p class="hd">@johannabuffets</p></div><div class="row"><p class="lb">TikTok</p><p class="hd">@johanna_buffet</p></div><div class="row"><p class="lb">WhatsApp Business</p><p class="hd">0969 269 846</p></div><p class="cta">Hagamos tu celebración inolvidable</p>';
+  }
+  return d;
+}
+
+for(var i=0;i<N;i++){
+  wrap.appendChild(makeSlide(SLIDES[i],i));
+  var dot=document.createElement('div');
+  dot.className='dot'+(i===0?' on':'');
+  (function(idx){dot.addEventListener('click',function(){go(idx);});})(i);
+  dc.appendChild(dot);
+}
+
+function go(idx){
+  clearInterval(timer);
+  document.getElementById('s'+cur).classList.remove('on');
+  dc.children[cur].classList.remove('on');
+  cur=(idx+N)%N;
+  document.getElementById('s'+cur).classList.add('on');
+  dc.children[cur].classList.add('on');
+  pb.style.width='0%';
+  startAuto();
+}
+
+function startAuto(){
+  var s=Date.now();
+  timer=setInterval(function(){
+    var e=Date.now()-s;
+    pb.style.width=Math.min(e/DELAY*100,100)+'%';
+    if(e>=DELAY){go(cur+1);}
+  },50);
+}
+
+document.getElementById('bP').addEventListener('click',function(e){e.preventDefault();go(cur-1);});
+document.getElementById('bN').addEventListener('click',function(e){e.preventDefault();go(cur+1);});
+
+var tx=0,ty=0;
+document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=tx-e.changedTouches[0].clientX;
+  var dy=ty-e.changedTouches[0].clientY;
+  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>35) go(dx>0?cur+1:cur-1);
+},{passive:true});
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' ')go(cur+1);
+  if(e.key==='ArrowLeft')go(cur-1);
+});
+
+startAuto();
+</script>
+</body>
+</html>
